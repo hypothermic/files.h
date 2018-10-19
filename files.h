@@ -79,6 +79,15 @@ char *files_get_path(File *f)
 
 /*! Get the absolute path of the parent folder.
  */
+File *files_get_parent_file(File *f)
+{
+    char *buf;
+    buf = strdup(files_get_path(f));
+    return files_new(dirname(buf));
+}
+
+/*! Get the absolute path of the parent folder.
+ */
 char *files_get_parent_path(File *f)
 {
     char *buf;

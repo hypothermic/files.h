@@ -11,16 +11,17 @@
 
 int main()
 {
-    // --- File Tools:                                    // ------ EXAMPLE OUTPUTS ------ //
-    File *file = files_new("./example.c");                // 
-    printf("Name: %s\n", files_get_name(file));           // Name: example.c
-    printf("Path: %s\n", files_get_path(file));           // Path: /home/hypothermic/c/files.h/tests/example.c
-    printf("Parent: %s\n", files_get_parent_path(file));  // Parent: /home/hypothermic/c/files.h/tests
-    printf("Contents: %s\n", files_contents_read(file));  // Contents: *prints the contents*
+    // --- File Tools:                                         // ------ EXAMPLE OUTPUTS ------ //
+    File *file = files_new("./example.c");                     // 
+    printf("Name: %s\n", files_get_name(file));                // Name: example.c
+    printf("Path: %s\n", files_get_path(file));                // Path: /home/hypothermic/c/files.h/tests/example.c
+    printf("Parent path: %s\n", files_get_parent_path(file));  // Parent path as String: /home/hypothermic/c/files.h/tests
+    printf("Parent file: %s\n", files_get_parent_file(file));  // Parent File object. No string output.
+    printf("Contents: %s\n", files_contents_read(file));       // Contents: *prints the contents*
 
-    // --- Write Tools:                                   // -------- INFORMATION -------- //
-    File *sample = files_new("./hello.txt");              // Creates a new file object to the relative file hello.txt
-    files_contents_write(sample, "Hello!");               // Creates the file (or overrides if it exists already) and writes "Hello!"
-    files_contents_append(sample, "Append me!");          // Appends a string to the end of the file.
-    files_contents_prepend(sample, "Prepend me!");        // Prepends a string to the beginning of the file
+    // --- Write Tools:                                        // -------- INFORMATION -------- //
+    File *sample = files_new("./hello.txt");                   // Creates a new file object to the relative file hello.txt
+    files_contents_write(sample, "Hello!");                    // Creates the file (or overrides if it exists already) and writes "Hello!"
+    files_contents_append(sample, "Append me!");               // Appends a string to the end of the file.
+    files_contents_prepend(sample, "Prepend me!");             // Prepends a string to the beginning of the file
 }
