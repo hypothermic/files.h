@@ -15,6 +15,7 @@ int main()
     File *file = files_new("./example.c");                     // 
     printf("Name: %s\n", files_get_name(file));                // Name: example.c
     printf("Path: %s\n", files_get_path(file));                // Path: /home/hypothermic/c/files.h/tests/example.c
+    printf("URI: %s\n", files_get_uri(file));                  // Path: file:///home/hypothermic/c/files.h/tests/example.c
     printf("Parent path: %s\n", files_get_parent_path(file));  // Parent path as String: /home/hypothermic/c/files.h/tests
     printf("Parent file: %s\n", files_get_parent_file(file));  // Parent File object. No string output.
     printf("Contents: %s\n", files_contents_read(file));       // Contents: *prints the contents*

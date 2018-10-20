@@ -95,6 +95,30 @@ char *files_get_parent_path(File *f)
     return dirname(buf);
 }
 
+char *files_get_uri(File *f)
+{
+    char* buf = files_get_path(f);
+
+    if (buf[0] == '/')
+    {
+        buf++;
+    }
+
+    const char* prefix = "file:///";
+    const unsigned int RESULT_SIZE = sizeof(buf) + sizeof(prefix) + 2 * sizeof('\0');
+
+    char* buf2 = malloc(RESULT_SIZE);
+
+    if (buf2)
+    {
+        strcpy(buf2, prefix);
+        strcat(buf2, buf);
+        return buf2;
+    }
+
+    return buf;
+}
+
 /*! Read the contents of a file to a string.
  */
 // source: https://stackoverflow.com/a/3464656/9107324
@@ -169,6 +193,16 @@ void files_contents_prepend(File *f, const char* data)
     fprintf(ptr, old);
 	
 	fclose(ptr);
+}
+
+char files_platform_get_seperator()
+{
+//#ifdef _WIN32
+#if defined WIN32 || defined _WIN32 || defined __CYGWIN__
+    return '\\';
+#else
+    return '/';
+#endif
 }
 
 #pragma GCC diagnostic pop
