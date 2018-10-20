@@ -95,6 +95,8 @@ char *files_get_parent_path(File *f)
     return dirname(buf);
 }
 
+/*! Get the uniform resource identifier (URI) of the file.
+ */
 char *files_get_uri(File *f)
 {
     char* buf = files_get_path(f);
