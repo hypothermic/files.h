@@ -15,8 +15,14 @@
 #include <string.h>
 #include <unistd.h>
 #include <libgen.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
+// TODO: get rid of <linux/**> imports
 #include <linux/limits.h>
+
+#define LIBFILESHT_VERSION ((int) 1)
 
 // --- File object --- //
 
@@ -41,6 +47,19 @@ void files_free(File *f)
 
 // --- Functions --- //
 
+/*! Get the seperator character for
+ *  your current platform.
+ */
+char files_platform_get_seperator()
+{
+
+#if defined WIN32 || defined _WIN32 || defined __CYGWIN__
+    return '\\';
+#else
+    return '/';
+#endif
+}
+
 /*! Does the file exist?
  *
  *  Returns 0 if not exist.
@@ -56,6 +75,26 @@ boolean files_is_exist(File *f)
     {
         return 0;
     }
+}
+
+/*! Is the file a directory?
+ *
+ *  Returns 0 if not exist.
+ *  Returns 1 if exist.
+ */
+boolean files_is_directory(File *f)
+{
+    boolean result = FALSE;
+
+    DIR* dir = opendir(f->path);
+
+    if (dir)
+    {
+        result = TRUE;
+        closedir(dir);
+    }
+
+    return result;
 }
 
 /*! Get the name of the file.
@@ -101,21 +140,38 @@ char *files_get_uri(File *f)
 {
     char* buf = files_get_path(f);
 
-    if (buf[0] == '/')
+    while (buf[0] == '/')
     {
+        //memmove(buf, buf+1, strlen (buf+1) + 1);
         buf++;
     }
 
     const char* prefix = "file:///";
-    const unsigned int RESULT_SIZE = sizeof(buf) + sizeof(prefix) + 2 * sizeof('\0');
 
-    char* buf2 = malloc(RESULT_SIZE);
+    char* buf2;
 
     if (buf2)
     {
         strcpy(buf2, prefix);
         strcat(buf2, buf);
         return buf2;
+    }
+
+    return buf;
+}
+
+/*! Get the size of the file
+ */
+long files_get_size(File *f)
+{
+    long buf = 0;
+    FILE *handler = fopen(files_get_path(f), "r");
+
+    if (handler)
+    {
+        fseek(handler, 0, SEEK_END);
+        buf = ftell(handler);
+        fclose(handler);
     }
 
     return buf;
@@ -197,16 +253,64 @@ void files_contents_prepend(File *f, const char* data)
 	fclose(ptr);
 }
 
-char files_platform_get_seperator()
+#pragma GCC diagnostic pop
+
+/*! Make a directory at specified file path
+ *  
+ *  Argument 2 is to specify the permissions
+ *  - for example: 0777
+ *
+ *  Returns 0 if not successful.
+ *  Returns 1 if successful.
+ */
+boolean files_mkdirp(File *f, int permissions)
 {
-//#ifdef _WIN32
-#if defined WIN32 || defined _WIN32 || defined __CYGWIN__
-    return '\\';
-#else
-    return '/';
-#endif
+    boolean result = FALSE;
+
+    if (!files_is_directory(f))
+    {
+        mkdir(files_get_path(f), 0755);
+        result = TRUE;
+    }
+
+    return result;
 }
 
-#pragma GCC diagnostic pop
+/*! Make a directory at specified file path
+ *
+ *  This function uses the default permission 0755
+ *
+ *  Returns 0 if not successful.
+ *  Returns 1 if successful.
+ */
+boolean files_mkdir(File *f)
+{
+    return files_mkdirp(f, 0755);
+}
+
+/*! Rename the specified file.
+ *
+ *  Returns 0 if not successful.
+ *  Returns 1 if successful.
+ */
+boolean files_rename(File *f, const char* new)
+{
+    boolean result = FALSE;
+
+    if (files_is_exist(f))
+    {
+        if (rename(files_get_path(f), new))
+        {
+            result = TRUE;
+        }
+    }
+
+    return result;
+}
+
+int files_lib_version()
+{
+    return LIBFILESHT_VERSION;
+}
 
 #endif // LIBFILESHT_H_
