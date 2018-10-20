@@ -1,0 +1,2 @@
+# Ignore all the /tests/ output files
+tests/*.txt
