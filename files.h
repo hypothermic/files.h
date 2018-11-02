@@ -160,6 +160,47 @@ char *files_get_uri(File *f)
     return buf;
 }
 
+/*! On which partition (device) is the file located?
+ *
+ *  Returns the Device ID if succeeded
+ *  Returns -1 if error.
+ */
+int files_get_partition_id(File *f)
+{
+    struct stat buf;
+
+    if (lstat(files_get_path(f), &buf) == 0)
+    {
+        return buf.st_dev;
+    }
+
+    return -1;
+}
+
+/*! Is the file a directory?
+ *
+ *  Returns the Device ID if succeeded
+ *  Returns empty char* if error.
+ */
+/*TODO//char *files_get_partition_name(File *f)
+{
+    int id = files_get_partition_id(f);
+
+    if (id == -1)
+    {
+        return "";
+    }
+
+    #if defined ( BSD )
+        return devname(id);
+    #else
+        #include <blkid/blkid.h>
+        return blkid_devno_to_devname(id);
+    #endif
+
+    return -1;
+}*/
+
 /*! Get the size of the file
  */
 long files_get_size(File *f)
