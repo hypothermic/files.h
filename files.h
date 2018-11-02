@@ -206,7 +206,7 @@ char *files_contents_read(File *f)
     return buffer;
 }
 
-#pragma GCC diagnostic ignored "-Wformat-security"
+//#pragma GCC diagnostic ignored "-Wformat-security"
 
 /*! Write a string to a file.
  *  
@@ -253,7 +253,7 @@ void files_contents_prepend(File *f, const char* data)
 	fclose(ptr);
 }
 
-#pragma GCC diagnostic pop
+//#pragma GCC diagnostic pop
 
 /*! Make a directory at specified file path
  *  
@@ -293,13 +293,13 @@ boolean files_mkdir(File *f)
  *  Returns 0 if not successful.
  *  Returns 1 if successful.
  */
-boolean files_rename(File *f, const char* new)
+boolean files_move(File *src, File* dest)
 {
     boolean result = FALSE;
 
-    if (files_is_exist(f))
+    if (files_is_exist(src))
     {
-        if (rename(files_get_path(f), new))
+        if (rename(files_get_path(src), files_get_path(dest)))
         {
             result = TRUE;
         }

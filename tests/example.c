@@ -28,7 +28,7 @@ int main()
     files_contents_append(sample, "Append me!");               // Appends a string to the end of the file.
     files_contents_prepend(sample, "Prepend me!");             // Prepends a string to the beginning of the file
 
-    // --- Create tools
+    // --- Create tools:
     File *directory = files_new("./directory/");
     if (!files_is_directory(directory))                        // if the file doesn't exist and isn't a directory
     {
@@ -37,7 +37,12 @@ int main()
         files_mkdirp(directory, 0777);                         // create the directory with specefied permissions
     }
     
-    File *wrongname = files_new("./wrongname.txt");
-    printf("Rename: %d\n", files_rename(wrongname, "correctname.txt"));
-
+    // --- Move a file:
+    File *source = files_new("./wrongname.txt");
+    if (!files_is_exist(source))
+    {
+        files_contents_write(source, "sample contents");       // write to file if it doesn't exist yet
+    }
+    File *destination = files_new("./correctname.txt");        // create a virtual file to the desired destination
+    printf("Move: %d\n", files_move(source, destination));     // execute the move from source to destination
 }
