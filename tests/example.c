@@ -36,9 +36,9 @@ int main()
     File *directory = files_new("./directory/");
     if (!files_is_directory(directory))                        // if the file doesn't exist and isn't a directory
     {
-        files_mkdir(directory);                                // create the directory with default permissions (0755)
+        printf("Mkdir: %d", files_mkdir(directory));           // create the directory with default permissions (0755)
         // or
-        files_mkdirp(directory, 0777);                         // create the directory with specefied permissions
+        printf("Mkdirp: %d", files_mkdirp(directory, 0777));   // create the directory with specefied permissions
     }
     
     // --- Move a file:
@@ -50,5 +50,5 @@ int main()
     File *destination = files_new("./correctname.txt");        // create a virtual file to the desired destination
     printf("Device id=%d name=%s\n", files_get_partition_id(source), files_get_partition_name(source));
     printf("Move: %d\n", files_move(source, destination));     // execute the move from source to destination
-
+    printf("Remove: %d", files_remove(destination));           // remove the file
 }

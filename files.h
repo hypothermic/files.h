@@ -423,7 +423,7 @@ boolean files_move(File *src, File* dest)
 
     if (files_is_exist(src))
     {
-        if (rename(files_get_path(src), files_get_path(dest)))
+        if (rename(files_get_path(src), files_get_path(dest)) == 0)
         {
             result = TRUE;
         }
