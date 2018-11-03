@@ -269,6 +269,11 @@ short files_get_owner_gid(File *f)
 }
 
 // adapted from: https://stackoverflow.com/a/46436636/9107324
+/*! Get the formatted permissions string (ex.: rw-r--r--)
+ *
+ *  Returns the permissions string if succeeded.
+ *  Returns "(error)" if error.
+ */
 char* files_get_permissions_str(File *f)
 {
     struct stat st;
