@@ -21,6 +21,10 @@ int main()
     printf("Parent path: %s\n", files_get_parent_path(file));  // Parent path: /home/hypothermic/c/files.h/tests
     printf("Contents: %s\n", files_contents_read(file));       // Contents: *prints the contents*
     printf("Size: %ld\n", files_get_size(file));               // Get file size as long: 1854
+    printf("Permissions=%s, uid=%d, gid=%d\n", 
+           files_get_permissions_str(file),                    // Get permissions as str: rw-r--r--
+           files_get_owner_uid(file),                          // Get file owner's User ID as int
+           files_get_owner_gid(file));                         // Get file owner's Group ID as int
 
     // --- Write Tools:                                        // -------- INFORMATION -------- //
     File *sample = files_new("./hello.txt");                   // Creates a new file object to the relative file hello.txt
