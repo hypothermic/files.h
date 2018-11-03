@@ -47,6 +47,11 @@ int main(int argc, char **argv)
 
 More examples are in the `tests` folder.
 
+## Dependencies
+
+If you're not running BSD, a recent version of libudev is
+required.
+
 ## Versioning
 
 This library is aimed to always be backwards-compatible.
