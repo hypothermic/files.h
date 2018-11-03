@@ -432,6 +432,26 @@ boolean files_move(File *src, File* dest)
     return result;
 }
 
+/*! Remove the specified file.
+ *
+ *  Returns 0 if not successful.
+ *  Returns 1 if successful.
+ */
+boolean files_remove(File *f)
+{
+    boolean result = FALSE;
+
+    if (files_is_exist(f))
+    {
+        if (remove(files_get_path(f)) == 0)
+        {
+            result = TRUE;
+        }
+    }
+
+    return result;
+}
+
 int files_lib_version()
 {
     return LIBFILESHT_VERSION;
