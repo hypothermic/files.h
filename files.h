@@ -234,6 +234,68 @@ long files_get_size(File *f)
     return buf;
 }
 
+/*! Get the file owner's user ID
+ *
+ *  Returns the user ID if succeeded
+ *  Returns -1 if error.
+ */
+short files_get_owner_uid(File *f)
+{
+    struct stat buf;
+
+    if (lstat(files_get_path(f), &buf) == 0)
+    {
+        return buf.st_uid;
+    }
+
+    return -1;
+}
+
+/*! Get the file owner's group ID
+ *
+ *  Returns the group ID if succeeded
+ *  Returns -1 if error.
+ */
+short files_get_owner_gid(File *f)
+{
+    struct stat buf;
+
+    if (lstat(files_get_path(f), &buf) == 0)
+    {
+        return buf.st_gid;
+    }
+
+    return -1;
+}
+
+// adapted from: https://stackoverflow.com/a/46436636/9107324
+char* files_get_permissions_str(File *f)
+{
+    struct stat st;
+    char *modeval = malloc(sizeof(char) * 9 + 1);
+
+    if(stat(files_get_path(f), &st) == 0)
+    {
+        mode_t perm = st.st_mode;
+
+        modeval[0] = (perm & S_IRUSR) ? 'r' : '-';
+        modeval[1] = (perm & S_IWUSR) ? 'w' : '-';
+        modeval[2] = (perm & S_IXUSR) ? 'x' : '-';
+        modeval[3] = (perm & S_IRGRP) ? 'r' : '-';
+        modeval[4] = (perm & S_IWGRP) ? 'w' : '-';
+        modeval[5] = (perm & S_IXGRP) ? 'x' : '-';
+        modeval[6] = (perm & S_IROTH) ? 'r' : '-';
+        modeval[7] = (perm & S_IWOTH) ? 'w' : '-';
+        modeval[8] = (perm & S_IXOTH) ? 'x' : '-';
+        modeval[9] = '\0';
+        
+        return modeval;
+    }
+
+    free(modeval);
+    return "(error)";
+}
+
 /*! Read the contents of a file to a string.
  */
 // source: https://stackoverflow.com/a/3464656/9107324
