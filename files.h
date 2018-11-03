@@ -19,10 +19,14 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#if !defined ( BSD ) // files_get_partition_name()
+    #include <libudev.h>
+#endif
+
 // TODO: get rid of <linux/**> imports
 #include <linux/limits.h>
 
-#define LIBFILESHT_VERSION ((int) 1)
+#define LIBFILESHT_VERSION ((int) 2)
 
 // --- File object --- //
 
@@ -182,7 +186,7 @@ int files_get_partition_id(File *f)
  *  Returns the Device ID if succeeded
  *  Returns empty char* if error.
  */
-/*TODO//char *files_get_partition_name(File *f)
+char *files_get_partition_name(File *f)
 {
     int id = files_get_partition_id(f);
 
@@ -192,14 +196,26 @@ int files_get_partition_id(File *f)
     }
 
     #if defined ( BSD )
+
         return devname(id);
+
     #else
-        #include <blkid/blkid.h>
-        return blkid_devno_to_devname(id);
+
+        struct udev *udev = udev_new();
+        struct udev_device *dev = udev_device_new_from_devnum(udev, 'b', id);
+
+        printf("X:%s\n", udev_device_get_devnode(dev));
+
+        const char* res = udev_device_get_devnode(dev);
+
+        udev_unref(udev);
+
+        return res;
+
     #endif
 
     return -1;
-}*/
+}
 
 /*! Get the size of the file
  */
