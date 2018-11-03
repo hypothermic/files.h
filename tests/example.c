@@ -44,7 +44,7 @@ int main()
         files_contents_write(source, "sample contents");       // write to file if it doesn't exist yet
     }
     File *destination = files_new("./correctname.txt");        // create a virtual file to the desired destination
-    printf("Device id=%d\n", files_get_partition_id(file));
+    printf("Device id=%d name=%s\n", files_get_partition_id(source), files_get_partition_name(source));
     printf("Move: %d\n", files_move(source, destination));     // execute the move from source to destination
 
 }
